@@ -11,25 +11,25 @@ form = """
 <label>Username: <input type="text" name="username" value="{username}"/></label>
 </td>
 <td>
-<label style="color:red">{username_input}</label>
+<label style="color:red">{username_message}</label>
 </td>
 </tr>
 
 <tr>
 <td>
-<label>Password: <input type="password" name="password"/></label>
+<label>Password: <input type="text" name="password"/></label>
 <td>
-<label style="color:red">{password_input}</label>
+<label style="color:red">{password_message}</label>
 </td>
 </td></tr>
 
 <tr>
 <td>
-<label>Verify Password: <input type="password" name="verify_password"/>
+<label>Verify Password: <input type="text" name="verify_password"/>
 </label>
 
 <td>
-<label style="color:red">{verifyPassword_input}</label>
+<label style="color:red">{password_match_message}</label>
 </td>
 </td></tr>
 
@@ -37,7 +37,7 @@ form = """
 <td>
 <label>Email (optional): <input type="text" name="email" value="{email}"/></label>
 <td>
-<label style="color:red">{email_input}</label>
+<label style="color:red">{email_message}</label>
 </td>
 </td></tr>
 
@@ -46,7 +46,6 @@ form = """
 </form>
 """
 
-#Do not change this block of code, it was provided by Udacity
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
     return username and USER_RE.match(username)
@@ -67,14 +66,12 @@ def valid_email(email):
 
 class MainHandler(webapp2.RequestHandler):
     def helper(self, user_message="", user_password="", match_password="",
-               user_email="", username = "", email = ""):
+               user_email=""):
         #string substitution
-        self.response.write(form.format(username_input= user_message,
-                              username = username,
-                              password_input= user_password,
-                              verifyPassword_input= match_password,
-                              email_input= user_email,
-                              email = email
+        self.response.write(form.format(username_message= user_message,
+                              password_message= user_password,
+                              password_match_message= match_password,
+                              email_message= user_email
                               ))
     def get(self):
         self.helper()
@@ -106,13 +103,13 @@ class MainHandler(webapp2.RequestHandler):
         if email is not "" and not valid_email(email):
             user_email="Please enter a valid email"
 
-        self.response.write(form.format(username_input= user_message,
-                                        username = username,
-                                        password_input= user_password,
-                                        verifyPassword_input= match_password,
-                                        email_input= user_email,
-                                        email = email
-                                        ))
+        self.response.write(form.format(username_message= user_message,
+                                    username = username,
+                                  password_message= user_password,
+                                  password_match_message= match_password,
+                                  email_message= user_email,
+                                  email = email
+                                  ))
 
 class Welcome(webapp2.RequestHandler):
     def get(self):
@@ -132,7 +129,7 @@ welcome = """
 </head>
 
 <body>
-
+#string substitution for username
 <h2>Welcome, {username}!</h2>
 </body>
 </html>
